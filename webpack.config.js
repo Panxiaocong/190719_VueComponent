@@ -1,6 +1,7 @@
 // __dirname: 代表当前文件所在目录的绝对路径  D:\前端学习\vue学习\09.张晓飞\day02\190719_VueComponent
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path"); // 用来解析路径相关信息的模块
+const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = {
   // 配置对象
@@ -32,7 +33,7 @@ module.exports = {
       // 处理CSS
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ["vue-style-loader", "css-loader"],
       },
       // 处理图片
       {
@@ -47,6 +48,11 @@ module.exports = {
           },
         ],
       },
+      // 处理vue单文件
+      {
+        test: /\.vue$/,
+        loader: "vue-loader",
+      },
     ],
   },
 
@@ -56,6 +62,8 @@ module.exports = {
       template: "index.html", // 将哪个页面作为模板页面处理(在根目录查找)
       filename: "index.html", // 生成页面(在output指定的path下)
     }),
+
+    new VueLoaderPlugin(),
   ],
 
   // 开发服务器的配置
@@ -67,4 +75,13 @@ module.exports = {
 
   // 开启source-map调试
   devtool: "cheap-module-eval-source-map",
+
+  // 引入模块的解析
+  resolve: {
+    extensions: [".js", ".vue", ".json"], // 可以省略的后缀名
+    alias: {
+      // 路径别名(简写方式)
+      vue$: "vue/dist/vue.esm.js", // 表示精准匹配   带vue编译器
+    },
+  },
 };
